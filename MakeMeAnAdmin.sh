@@ -21,7 +21,7 @@
 currentUser=$(who | awk '/console/{print $1}')
 echo $currentUser
 
-osascript -e 'display dialog "You now have administrative rights for 30 minutes. DO NOT ABUSE THIS PRIVILEGE..." buttons {"Make me an admin, please"} default button 1'
+osascript -e 'display dialog "You now have administrative rights for 15 minutes. DO NOT ABUSE THIS PRIVILEGE..." buttons {"Make me an admin, please"} default button 1'
 
 #########################################################
 # write a daemon that will let you remove the privilege #
@@ -36,7 +36,7 @@ sudo defaults write /Library/LaunchDaemons/removeAdmin.plist Label -string "remo
 sudo defaults write /Library/LaunchDaemons/removeAdmin.plist ProgramArguments -array -string /bin/sh -string "/Library/Application Support/JAMF/removeAdminRights.sh"
 
 #Set the run inverval to run every 7 days
-sudo defaults write /Library/LaunchDaemons/removeAdmin.plist StartInterval -integer 1800
+sudo defaults write /Library/LaunchDaemons/removeAdmin.plist StartInterval -integer 900
 
 #Set run at load
 sudo defaults write /Library/LaunchDaemons/removeAdmin.plist RunAtLoad -boolean yes
@@ -80,7 +80,7 @@ if [[ -f /private/var/userToRemove/user ]]; then
 	rm -f /private/var/userToRemove/user
 	launchctl unload /Library/LaunchDaemons/removeAdmin.plist
 	rm /Library/LaunchDaemons/removeAdmin.plist
-	log collect --last 30m --output /private/var/userToRemove/$userToRemove.logarchive
+	log collect --last 15m --output /private/var/userToRemove/$userToRemove.logarchive
 fi
 EOF
 
